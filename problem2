@@ -1,0 +1,35 @@
+#include<string>
+#include<vector>
+#include<sstream>
+#include<map>
+#include<tuple>
+using namespace std;
+
+vector<string> solution(vector<string> record) {
+	string doing, id, name;
+	vector<string> answer;
+	vector<tuple<string, string, string>> vec;
+	map<string, string> user;
+
+	for (int i = 0; i < record.size(); i++) {
+		istringstream iss(record[i]);
+		iss >> doing >> id >> name;
+
+		if (doing != "Leave") user[id] = name;
+		if (doing != "Change") vec.push_back({ doing, id, user[id] });
+	}
+
+	for (int i = 0; i < vec.size(); i++) {
+		get<2>(vec[i]) = user[get<1>(vec[i])];
+	}
+
+	for (int i = 0; i < vec.size(); i++) {
+		if (get<0>(vec[i]) == "Enter") {
+			answer.push_back(get<2>(vec[i]) + "님이 들어왔습니다.");
+		}
+		else if (get<0>(vec[i]) == "Leave") {
+			answer.push_back(get<2>(vec[i]) + "님이 나갔습니다.");
+		}
+	}
+	return answer;
+}
